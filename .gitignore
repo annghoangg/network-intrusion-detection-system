@@ -1,0 +1,17 @@
+# Dataset
+Input/
+splits/
+*.csv
+*.pcap
+*.pkl
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# macOS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
