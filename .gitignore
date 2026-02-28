@@ -5,6 +5,9 @@ splits/
 *.pcap
 *.pkl
 
+# Local docs (for report use only)
+docs/
+
 # Python
 __pycache__/
 *.pyc
