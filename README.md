@@ -1,31 +1,31 @@
 # CICIDS2017 — Network Intrusion Detection
 
-A machine-learning pipeline for multi-class network intrusion detection using the [CICIDS2017](https://www.unb.ca/cic/datasets/ids-2017.html) dataset.
+A machine-learning pipeline for multi-class network intrusion detection using the [CICIDS2017](https://www.kaggle.com/datasets/chethuhn/network-intrusion-dataset) dataset.
 
 ## Project Structure
 
 ```
 Project/
-├── Input/                          # Raw CICIDS2017 CSV files (8 traffic captures)
-├── splits/                         # Stratified train/test splits (pickle)
+├── Input/                         
+├── splits/                         
 │   ├── X_train.pkl
 │   ├── X_test.pkl
 │   ├── y_train.pkl
 │   └── y_test.pkl
 │
-├── src/                            # Reusable Python modules
+├── src/                          
 │   ├── __init__.py
-│   ├── data_ingestion.py           # Load & merge raw CSVs
-│   ├── preprocessing.py            # Data cleaning pipeline
-│   ├── feature_engineering.py      # Correlation analysis & feature selection
-│   ├── eda.py                      # Statistical EDA helpers & visualisations
-│   └── model_training.py           # Train/test split, evaluation, comparison
+│   ├── data_ingestion.py           
+│   ├── preprocessing.py          
+│   ├── feature_engineering.py     
+│   ├── eda.py                    
+│   └── model_training.py          
 │
 ├── notebooks/
-│   └── 01_data_pipeline.ipynb      # Orchestrating notebook (runs full pipeline)
+│   └── 01_data_pipeline.ipynb    
 │
-├── cicids2017_cleaned.csv          # Cleaned & feature-engineered output dataset
-├── code.ipynb                      # Original monolithic notebook (kept for reference)
+├── cicids2017_cleaned.csv         
+├── code legacy (dont run).ipynb                     
 └── README.md
 ```
 
@@ -38,16 +38,14 @@ Input CSVs  →  data_ingestion  →  preprocessing  →  feature_engineering  �
                                                                          (split → train → evaluate)
 ```
 
-## How to Run
+## How to Run (you dumb)
 
-### Step 1 — Data Pipeline
+### 1. — Data Pipeline
 
-Open and run **`notebooks/01_data_pipeline.ipynb`** sequentially.  
-This will generate `cicids2017_cleaned.csv`.
+notebooks/01_data_pipeline.ipynb
+generate cleaned data csv
 
-> **Skip if** `cicids2017_cleaned.csv` already exists and is up to date.
-
-### Step 2 — Model Training (script)
+### 2. — Model Training (script)
 
 ```bash
 cd /path/to/Project
@@ -62,7 +60,7 @@ from src.model_training import load_splits, evaluate_model, compare_models
 X_train, X_test, y_train, y_test = load_splits()
 ```
 
-### Step 3 — Importing Individual Modules
+### 3. — Importing Individual Modules
 
 ```python
 from src.data_ingestion     import load_raw_data
@@ -85,8 +83,4 @@ from src.model_training      import evaluate_model, compare_models
 | Bot | Botnet activity |
 | Heartbleed | Heartbleed vulnerability exploit |
 
-## Key Design Decisions
-
-- **No scaling/resampling in the pipeline notebook** — SMOTE, RobustScaler, etc., are applied *inside* the training pipeline (post-split) to prevent data leakage.
-- **Stratified split** — class proportions are preserved in both train and test sets.
-- **Feature selection rationale** — low-importance features were identified by combining Random Forest importance scores with Kruskal-Wallis H-statistics, removing features that scored low on both.
+mẹ cmay béo
