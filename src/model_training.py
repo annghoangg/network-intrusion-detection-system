@@ -70,7 +70,7 @@ def load_and_split(
             ("X_train", X_train),
             ("X_test",  X_test),
             ("y_train", y_train),
-            ("y_test",  y_test),
+            ("y_test",  y_test), 
         ]:
             path = os.path.join(SPLIT_DIR, f"{name}.pkl")
             with open(path, "wb") as f:

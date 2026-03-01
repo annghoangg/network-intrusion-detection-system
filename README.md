@@ -1,51 +1,60 @@
 # CICIDS2017 — Network Intrusion Detection
 
-A machine-learning pipeline for multi-class network intrusion detection using the [CICIDS2017](https://www.kaggle.com/datasets/chethuhn/network-intrusion-dataset) dataset.
+A machine-learning pipeline for multi-class network intrusion detection using the [CICIDS2017](https://www.kaggle.com/datasets/chethuhn/network-intrusion-dataset/) dataset. A DAP391m project - Group 1.
+
+## Members
+
+- Nguyen Hoang An
+- Vu Ngoc Hai Dang
+- Le Trung Kien
+- Le Trung Hieu
+- Do Anh Thu
 
 ## Project Structure
 
 ```
 Project/
-├── Input/                         
-├── splits/                         
+├── Input/                        
+├── splits/                       
 │   ├── X_train.pkl
 │   ├── X_test.pkl
 │   ├── y_train.pkl
 │   └── y_test.pkl
 │
 ├── src/                          
+├── src/                          
 │   ├── __init__.py
-│   ├── data_ingestion.py           
-│   ├── preprocessing.py          
-│   ├── feature_engineering.py     
-│   ├── eda.py                    
-│   └── model_training.py          
+│   ├── data_ingestion.py
+│   ├── eda.py
+│   ├── preprocessing.py - Data cleaning + correlation analysis and feature selection
+│   ├── feature_engineering.py
+│   └── model_training.py - Train/test split, evaluation, comparison
 │
 ├── notebooks/
-│   └── 01_data_pipeline.ipynb    
+│   └── 01_data_pipeline.ipynb
 │
-├── cicids2017_cleaned.csv         
-├── code legacy (dont run).ipynb                     
-└── README.md
+├── cicids2017_cleaned.csv
+├── code.ipynb
+├── README.md
+└── requirements.txt
 ```
 
 ## ML Pipeline Overview
 
 ```
-Input CSVs  →  data_ingestion  →  preprocessing  →  feature_engineering  →  cicids2017_cleaned.csv
-                                                                                       ↓
-                                                                             model_training
-                                                                         (split → train → evaluate)
+Input CSVs  →  data_ingestion  →  eda  →  preprocessing  →  feature_engineering  →  cicids2017_cleaned.csv  →  model training
+                                                                                                                     ↓
+                                                                                                          (split → train → evaluate)
+                                           
+                                                                         
 ```
 
-## How to Run (you dumb)
 
-### 1. — Data Pipeline
+Run **`notebooks/01_data_pipeline.ipynb`**
+This will generate `cicids2017_cleaned.csv`.
 
-notebooks/01_data_pipeline.ipynb
-generate cleaned data csv
 
-### 2. — Model Training (script)
+**Model Training (script)**
 
 ```bash
 cd /path/to/Project
@@ -60,7 +69,7 @@ from src.model_training import load_splits, evaluate_model, compare_models
 X_train, X_test, y_train, y_test = load_splits()
 ```
 
-### 3. — Importing Individual Modules
+**Importing Individual Modules**
 
 ```python
 from src.data_ingestion     import load_raw_data
@@ -82,5 +91,3 @@ from src.model_training      import evaluate_model, compare_models
 | Web Attack | Brute Force / XSS / SQL Injection |
 | Bot | Botnet activity |
 | Heartbleed | Heartbleed vulnerability exploit |
-
-mẹ cmay béo
