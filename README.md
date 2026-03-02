@@ -21,8 +21,7 @@ Project/
 │   ├── y_train.pkl
 │   └── y_test.pkl
 │
-├── src/                          
-├── src/                          
+├── src/                                                 
 │   ├── __init__.py
 │   ├── data_ingestion.py
 │   ├── eda.py
@@ -34,7 +33,6 @@ Project/
 │   └── 01_data_pipeline.ipynb
 │
 ├── cicids2017_cleaned.csv
-├── code.ipynb
 ├── README.md
 └── requirements.txt
 ```
