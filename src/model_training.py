@@ -26,7 +26,7 @@ from sklearn.preprocessing import label_binarize
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 TARGET_COL = "Attack Type"
 RANDOM_STATE = 42
-TEST_SIZE = 0.2
+TEST_SIZE = 0.2                                                                                                                                                                                     
 DATA_PATH = str(_PROJECT_ROOT / "cicids2017_cleaned.csv")
 SPLIT_DIR = str(_PROJECT_ROOT / "splits")
 
@@ -42,7 +42,7 @@ def load_and_split(
 ) -> tuple:
     print(f"Loading data from: {data_path}")
     df = pd.read_csv(data_path)
-    print(f"  → Loaded {df.shape[0]:,} rows × {df.shape[1]} columns\n")
+    print(f" → Loaded {df.shape[0]:,} rows × {df.shape[1]} columns\n")
 
     X = df.drop(columns=[target_col])
     y = df[target_col]
