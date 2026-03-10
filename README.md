@@ -36,6 +36,13 @@ Project/
 ├── README.md
 └── requirements.txt
 ```
+## Installation
+
+To install all the necessary libraries used in this project, run the following command to install them from the provided text file:
+
+```bash
+pip install -r requirements.txt
+```
 
 ## ML Pipeline Overview
 
@@ -50,22 +57,6 @@ Input CSVs  →  data_ingestion  →  eda  →  preprocessing  →  feature_engi
 
 Run **`notebooks/01_data_pipeline.ipynb`**
 This will generate `cicids2017_cleaned.csv`.
-
-
-**Model Training (script)**
-
-```bash
-cd /path/to/Project
-python -m src.model_training
-```
-
-Or load the splits in any notebook / script:
-
-```python
-from src.model_training import load_splits, evaluate_model, compare_models
-
-X_train, X_test, y_train, y_test = load_splits()
-```
 
 **Importing Individual Modules**
 
