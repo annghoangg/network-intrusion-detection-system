@@ -6,6 +6,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+import shap
+import matplotlib.pyplot as plt
 from pathlib import Path
 
 # ── Paths ──
@@ -42,6 +44,12 @@ def load_model():
     return model, le
 
 
+@st.cache_resource
+def get_explainer():
+    model, _ = load_model()
+    return shap.TreeExplainer(model)
+
+
 # ── Page config ──
 st.set_page_config(page_title="NIDS Dashboard", page_icon="🛡️", layout="wide")
 
@@ -56,7 +64,8 @@ with st.sidebar:
     st.markdown(
         "**How to use:**\n"
         "1. Upload a CSV or click *Use Sample Data*\n"
-        "2. View predictions below"
+        "2. View predictions below\n"
+        "3. Select a threat to see AI explanation"
     )
 
 # ── Main ──
@@ -125,6 +134,74 @@ if data is not None:
                      "Flow Duration", "Flow Bytes/s", "Total Fwd Packets"]
         show_cols = [c for c in show_cols if c in filtered.columns]
         st.dataframe(filtered[show_cols].reset_index(drop=True), use_container_width=True)
+
+    # ── SHAP Explanation ──
+    st.divider()
+    st.subheader("AI Explanation (SHAP)")
+    st.write("Select a flow to see why the model made its prediction.")
+
+    # Let user pick a row to explain
+    row_idx = st.number_input(
+        "Row index to explain",
+        min_value=0,
+        max_value=len(results) - 1,
+        value=0,
+        step=1,
+    )
+
+    if st.button("Explain Prediction"):
+        row = X.iloc[[row_idx]]
+        pred_label = results.iloc[row_idx]["Prediction"]
+        pred_conf = results.iloc[row_idx]["Confidence (%)"]
+        pred_class_idx = int(y_pred[row_idx])
+
+        st.info(f"**Row {row_idx}** → Predicted: **{pred_label}** (Confidence: {pred_conf}%)")
+
+        with st.spinner("Calculating SHAP values..."):
+            explainer = get_explainer()
+            shap_values = explainer.shap_values(row)
+
+        # shap_values shape depends on SHAP version:
+        #   - Old: list of arrays, one per class (each shape (1, 52))
+        #   - New: single ndarray of shape (1, 52, n_classes)
+        if isinstance(shap_values, list):
+            sv = shap_values[pred_class_idx][0]
+            base = explainer.expected_value[pred_class_idx]
+        elif shap_values.ndim == 3:
+            sv = shap_values[0, :, pred_class_idx]
+            base = explainer.expected_value[pred_class_idx]
+        else:
+            sv = shap_values[0]
+            base = explainer.expected_value
+
+        # Build SHAP Explanation object for waterfall plot
+        explanation = shap.Explanation(
+            values=sv,
+            base_values=float(base),
+            data=row.values[0],
+            feature_names=EXPECTED_FEATURES,
+        )
+
+        # Show top 15 features
+        top_k = 15
+        top_indices = np.argsort(np.abs(sv))[::-1][:top_k]
+
+        # Create waterfall plot
+        fig, ax = plt.subplots(figsize=(10, 6))
+        shap.plots.waterfall(explanation, max_display=top_k, show=False)
+        plt.title(f"SHAP Explanation — Predicted: {pred_label}", fontsize=14)
+        plt.tight_layout()
+        st.pyplot(fig)
+        plt.close()
+
+        # Also show top features as a simple table
+        st.write("**Top contributing features:**")
+        feat_df = pd.DataFrame({
+            "Feature": [EXPECTED_FEATURES[i] for i in top_indices],
+            "Value": [float(row.values[0][i]) for i in top_indices],
+            "SHAP Impact": [round(float(sv[i]), 4) for i in top_indices],
+        })
+        st.dataframe(feat_df, use_container_width=True, hide_index=True)
 
     # ── Full results ──
     with st.expander("View All Predictions"):
