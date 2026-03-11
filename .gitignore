@@ -1,6 +1,9 @@
-# Dataset
-Input/
-splits/
+# Dataset and Large Files
+Input/*
+!Input/.gitkeep
+splits/*
+!splits/.gitkeep
+cicids2017_cleaned.csv
 *.csv
 *.pcap
 *.pkl

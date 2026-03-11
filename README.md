@@ -15,6 +15,10 @@ A machine-learning pipeline for multi-class network intrusion detection using th
 ```
 Project/
 ├── Input/                        
+├── models/
+│   ├── label_encoder.joblib
+│   └── xgboost_best_model.joblib
+│
 ├── splits/                       
 │   ├── X_train.pkl
 │   ├── X_test.pkl
@@ -30,7 +34,17 @@ Project/
 │   └── model_training.py - Train/test split, evaluation, comparison
 │
 ├── notebooks/
-│   └── 01_data_pipeline.ipynb
+│   ├── 01_data_pipeline.ipynb
+│   ├── 02_logistic_regression.ipynb
+│   ├── 03_decision_tree.ipynb
+│   ├── 04_random_forest.ipynb
+│   ├── 05_xgboost.ipynb
+│   ├── 06_lightgbm.ipynb
+│   ├── 07_extra_trees.ipynb
+│   ├── 08_hyperparameter_tuning.ipynb
+│   ├── 09_model_comparison.ipynb
+│   ├── 10_ensemble_model.ipynb
+│   └── results/
 │
 ├── cicids2017_cleaned.csv
 ├── README.md
