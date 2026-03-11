@@ -82,6 +82,16 @@ from src.eda                 import analyze_feature_importance_kruskal
 from src.model_training      import evaluate_model, compare_models
 ```
 
+## Dashboard Demo
+
+To launch the interactive dashboard for testing the trained model:
+
+```bash
+streamlit run app/app.py
+```
+
+Upload a CSV file containing network flow features, or click **Use Sample Data** to try the demo with pre-loaded test data.
+
 ## Target Classes (Attack Types)
 
 | Label | Description |
