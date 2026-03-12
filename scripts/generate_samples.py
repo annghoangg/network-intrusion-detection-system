@@ -62,7 +62,7 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     for i in range(1, args.n_files + 1):
-        seed = 42 + i
+        seed = None
         sample = generate_sample(X_test, y_test, n_rows=args.n_rows, seed=seed)
         filename = f"sample_{i}.csv"
         path = OUTPUT_DIR / filename

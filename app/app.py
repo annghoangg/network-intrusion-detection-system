@@ -14,7 +14,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MODEL_PATH = PROJECT_ROOT / "models" / "xgboost_best_model.joblib"
 ENCODER_PATH = PROJECT_ROOT / "models" / "label_encoder.joblib"
-SAMPLE_PATH = Path(__file__).resolve().parent / "sample_test_data.csv"
 
 EXPECTED_FEATURES = [
     "Destination Port", "Flow Duration", "Total Fwd Packets",
@@ -59,11 +58,10 @@ with st.sidebar:
     st.caption("CICIDS2017 · XGBoost")
     st.divider()
     uploaded_file = st.file_uploader("Upload network traffic CSV", type=["csv"])
-    use_sample = st.button("Use Sample Data")
     st.divider()
     st.markdown(
         "**How to use:**\n"
-        "1. Upload a CSV or click *Use Sample Data*\n"
+        "1. Upload a CSV\n"
         "2. View predictions below\n"
         "3. Select a threat to see AI explanation"
     )
@@ -77,8 +75,6 @@ st.divider()
 data = None
 if uploaded_file is not None:
     data = pd.read_csv(uploaded_file)
-elif use_sample:
-    data = pd.read_csv(SAMPLE_PATH)
 
 if data is not None:
     model, le = load_model()
@@ -89,9 +85,9 @@ if data is not None:
         st.error(f"Missing {len(missing)} required column(s): {', '.join(missing[:5])}")
         st.stop()
 
-    X = data[EXPECTED_FEATURES]
-
-    # Predict
+    # Preprocess datatypes to prevent XGBoost/SHAP errors from dirty CSVs
+    X = data[EXPECTED_FEATURES].copy()
+    X = X.apply(pd.to_numeric, errors='coerce').fillna(0)
     with st.spinner("Running predictions..."):
         y_pred = model.predict(X)
         y_labels = le.inverse_transform(y_pred)
@@ -132,8 +128,9 @@ if data is not None:
 
         show_cols = ["Prediction", "Confidence (%)", "Destination Port",
                      "Flow Duration", "Flow Bytes/s", "Total Fwd Packets"]
-        show_cols = [c for c in show_cols if c in filtered.columns]
-        st.dataframe(filtered[show_cols].reset_index(drop=True), use_container_width=True)
+        display_df = filtered[show_cols].reset_index()
+        display_df.rename(columns={"index": "Row Index"}, inplace=True)
+        st.dataframe(display_df, use_container_width=True, hide_index=True)
 
     # ── SHAP Explanation ──
     st.divider()
@@ -213,4 +210,4 @@ if data is not None:
                        file_name="nids_predictions.csv", mime="text/csv")
 
 else:
-    st.info("👈 Upload a CSV file or click **Use Sample Data** to get started.")
+    st.info("👈 Upload a CSV file to get started.")
